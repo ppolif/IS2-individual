@@ -11,7 +11,7 @@ function App() {
   const [count, setCount] = useState(0)
   */}
 
-  const elementoActual = ELEMENTOS[1]
+  const elementoActual = ELEMENTOS[4]
 
   return (
     <>
