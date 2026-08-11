@@ -2,7 +2,7 @@
 .tarjeta {
   
   width: 90%;
-  max-width: 450px;
+  max-width: 560px;
   height: fit-content;
   
   background-color: #2e2e36;
@@ -80,6 +80,11 @@
     background-color: #ffffff; /* Color violeta llamativo */
     color: #2e2e36;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
+}
+
+.tarjeta-botones .appealing {
+  background-color: #7cb1a9;
+  color: white;
 }
 
 .tarjeta-skip:hover {

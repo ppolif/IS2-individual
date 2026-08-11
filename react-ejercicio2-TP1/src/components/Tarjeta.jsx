@@ -1,6 +1,11 @@
 import './Tarjeta.css'
+import { useState } from 'react'
 
-export function Tarjeta({item}) {
+export function Tarjeta({item, appeals, manejoAppeals, manejoNext}) {
+
+    const text = appeals ? 'Appealing!' : 'Appeals to me' 
+    const claseBoton = appeals ? 'appealing' : 'notAppealing'
+
 
     return (
         <div className="tarjeta">
@@ -25,11 +30,11 @@ export function Tarjeta({item}) {
             </div>
 
             <div className="tarjeta-botones">
-                <button className="tarjeta-appeals">
-                    Appeals to me
+                <button className={`tarjeta-appeals ${claseBoton}`} onClick={manejoAppeals}>
+                    {text}
                 </button>
 
-                <button className="tarjeta-skip">
+                <button className="tarjeta-skip" onClick={manejoNext}>
                     Next
                 </button>
             </div>
