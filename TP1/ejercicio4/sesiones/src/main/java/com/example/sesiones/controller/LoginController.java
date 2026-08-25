@@ -20,7 +20,7 @@ public class LoginController {
 
         usuarios.put("Luisina", "1234");
         usuarios.put("TodoCode", "java");
-        
+
     }
 
     //Login
