@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORE STOCK</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/app.css}">
+</head>
+<body>
+<div id="sidebar" class="active" th:fragment="sidebar">
+    <div class="sidebar-wrapper active">
+        <div class="sidebar-header">
+            <div class="d-flex justify-content-between">
+                <div class="logo">
+                    <a href="/inventario">CORE.STOCK</a>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <div class="px-4 mb-3">
+                <small class="text-muted">Operador:</small>
+                <p class="fw-bold mb-0" sec:authentication="name"></p>
+            </div>
+            <ul class="menu">
+                <li class="sidebar-item">
+                    <a href="/inventario" class="sidebar-link">
+                        <i class="bi bi-box"></i>
+                        <span>Inventario</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/compras" class="sidebar-link">
+                        <i class="bi bi-cart"></i>
+                        <span>Órdenes de Compra</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/proveedores" class="sidebar-link">
+                        <i class="bi bi-truck"></i>
+                        <span>Proveedores</span>
+                    </a>
+                </li>
+                <li class="sidebar-item mt-5">
+                    <a href="/logout" class="sidebar-link text-danger">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Salir</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="scripts">
+    <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
+</div>
+</body>
+</html>

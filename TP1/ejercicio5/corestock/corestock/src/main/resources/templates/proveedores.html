@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading d-flex justify-content-between align-items-center">
+            <h3>Proveedores</h3>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProveedor" onclick="nuevoProveedor()">
+                <i class="bi bi-plus-lg"></i> Nuevo Proveedor
+            </button>
+        </div>
+
+        <div class="page-content">
+            <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+
+            <section class="section">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>CUIT</th>
+                                <th>Razón Social</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="prov : ${proveedores}">
+                                <td class="text-bold-500" th:text="${prov.cuit}">CUIT</td>
+                                <td th:text="${prov.razonSocial}">Razón Social</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-light-primary"
+                                            th:attr="onclick=|editarProveedor('${prov.cuit}', '${prov.razonSocial}')|"
+                                            data-bs-toggle="modal" data-bs-target="#modalProveedor">
+                                        Editar
+                                    </button>
+                                    <form th:action="@{/proveedores/eliminar/{cuit}(cuit=${prov.cuit})}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-light-danger"
+                                                onclick="return confirm('¿Seguro que querés eliminar este proveedor?');">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Nuevo / Editar Proveedor -->
+<div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="modalProveedorLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form th:action="@{/proveedores/guardar}" method="POST" th:object="${proveedorDTO}" class="modal-content" id="formProveedor">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProveedorLabel">Nuevo Proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">CUIT</label>
+                    <input type="number" class="form-control" th:field="*{cuit}" id="inputCuit" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Razón Social</label>
+                    <input type="text" class="form-control" th:field="*{razonSocial}" id="inputRazonSocial" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+<script>
+    function nuevoProveedor() {
+        document.getElementById('modalProveedorLabel').innerText = 'Nuevo Proveedor';
+        document.getElementById('inputCuit').value = '';
+        document.getElementById('inputCuit').removeAttribute('readonly');
+        document.getElementById('inputRazonSocial').value = '';
+    }
+    function editarProveedor(cuit, razonSocial) {
+        document.getElementById('modalProveedorLabel').innerText = 'Editar Proveedor';
+        document.getElementById('inputCuit').value = cuit;
+        document.getElementById('inputCuit').setAttribute('readonly', 'readonly');
+        document.getElementById('inputRazonSocial').value = razonSocial;
+    }
+</script>
+</body>
+</html>

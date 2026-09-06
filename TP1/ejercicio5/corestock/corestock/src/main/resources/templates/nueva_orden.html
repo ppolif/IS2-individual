@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <h3>Nueva Orden de Compra</h3>
+        </div>
+
+        <div class="page-content">
+            <section class="section">
+                <div class="card">
+                    <div class="card-body">
+                        <form th:action="@{/compras/nueva}" method="POST" th:object="${ordenDTO}">
+                            <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label>Proveedor Mayorista</label>
+                                    <fieldset class="form-group">
+                                        <select class="form-select" th:field="*{proveedorCuit}" required>
+                                            <option value="" disabled selected>Seleccione proveedor...</option>
+                                            <option th:each="prov : ${proveedores}" th:value="${prov.cuit}" th:text="${prov.razonSocial}"></option>
+                                        </select>
+                                    </fieldset>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-3">Productos</h5>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <label>Seleccionar Producto</label>
+                                    <fieldset class="form-group">
+                                        <select class="form-select" name="productosIds" required>
+                                            <option th:each="prod : ${productos}" th:value="${prod.id}" th:text="${prod.nombre} + ' (' + ${prod.marca} + ')'"></option>
+                                        </select>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Cantidad</label>
+                                    <input type="number" class="form-control" name="cantidades" value="1" min="1" required>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-5">
+                                <button type="submit" class="btn btn-primary btn-lg">Guardar y Actualizar Stock</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

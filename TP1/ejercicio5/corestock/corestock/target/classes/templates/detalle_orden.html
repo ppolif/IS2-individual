@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <h3>Detalle de Orden <span th:text="'#' + ${orden.id}"></span></h3>
+        </div>
+
+        <div class="page-content">
+            <section class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Resumen de la Transacción</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <p class="text-muted mb-1">Proveedor</p>
+                                <h5 th:text="${orden.proveedorNombre}">Nombre</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="text-muted mb-1">Fecha Emisión</p>
+                                <h5 th:text="${#dates.format(orden.fechaEmision, 'dd MMM yyyy - HH:mm')}">Fecha</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="text-muted mb-1">Estado</p>
+                                <span class="badge bg-success" th:text="${orden.estado}">ESTADO</span>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered mt-4">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Total Neto</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Resumen de ingresos de mercadería</td>
+                                <td class="text-bold-500" th:text="'$' + ${orden.total}">$0.0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-4">
+                            <a href="/compras" class="btn btn-light-secondary">Volver al Listado</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
