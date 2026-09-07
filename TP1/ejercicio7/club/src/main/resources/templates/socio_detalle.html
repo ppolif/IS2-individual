@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <div class="page-heading">
+            <h3>Detalle del Socio</h3>
+        </div>
+        <div class="page-content">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <img th:if="${socio.foto != null}" th:src="@{/img/foto/{id}(id=${socio.foto.id})}" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+                                <img th:unless="${socio.foto != null}" th:src="@{/assets/images/faces/1.jpg}" class="img-fluid rounded-circle" style="width: 200px;">
+                            </div>
+                            <div class="col-md-8">
+                                <h4 th:text="${socio.nombre + ' ' + socio.apellido}"></h4>
+                                <p><strong>DNI:</strong> <span th:text="${socio.dni}"></span></p>
+                                <p><strong>Nro Socio:</strong> <span th:text="${socio.nroSocio}"></span></p>
+                                <p th:if="${socio.familia != null}">
+                                    <strong>Grupo Familiar:</strong>
+                                    <a th:href="@{/familias/{id}(id=${socio.familia.id})}" class="btn btn-sm btn-outline-primary">Ver Familia</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

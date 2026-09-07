@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none"><i class="bi bi-justify fs-3"></i></a>
+        </header>
+
+        <div class="page-heading">
+            <h3>Registro de Accesos</h3>
+        </div>
+
+        <div class="page-content">
+            <section class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <form th:action="@{/accesos/hoy}" method="GET" class="row gx-3 gy-2 align-items-center">
+                            <div class="col-sm-4">
+                                <label class="form-label">Fecha</label>
+                                <input type="date" class="form-control" name="fecha" th:value="${fechaSeleccionada}">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="form-label">Buscar por DNI</label>
+                                <input type="text" class="form-control" name="query" th:value="${query}" placeholder="DNI del Socio/Familiar">
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="form-label text-white">.</label>
+                                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>DNI</th>
+                                <th>Fecha</th>
+                                <th>Hora Entrada</th>
+                                <th>Hora Salida</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="acceso : ${accesos}">
+                                <td class="text-bold-500" th:text="${acceso.dniPersona}"></td>
+                                <td th:text="${acceso.fecha}"></td>
+                                <td th:text="${acceso.horaEntrada}"></td>
+                                <td>
+                                    <span th:if="${acceso.horaSalida != null}" th:text="${acceso.horaSalida}"></span>
+                                    <span th:unless="${acceso.horaSalida != null}" class="badge bg-success">En el club</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
