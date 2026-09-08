@@ -1,0 +1,74 @@
+<!--
+    pago_cuota.html
+    ----------------------------------------------------------------------
+    Formulario de registro de pago de cuota. El "destino" del pago
+    (idSocio o idFamilia) llega FIJO desde PagoCuotaController como
+    campos ocultos del DTO: esta pantalla nunca deja elegir un socio
+    cualquiera de una lista, porque siempre se navega hasta acá desde el
+    detalle puntual de la familia o del socio individual que va a pagar.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none"><i class="bi bi-justify fs-3"></i></a>
+        </header>
+
+        <div class="page-heading">
+            <h3>Registro de Pago de Cuota</h3>
+        </div>
+
+        <div class="page-content">
+            <section class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Completar Transacción</h4>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+
+                        <form th:action="@{/pagos/registrar}" method="POST" th:object="${pagoDTO}">
+                            <input type="hidden" th:field="*{idSocio}">
+                            <input type="hidden" th:field="*{idFamilia}">
+
+                            <div class="mb-3">
+                                <label class="form-label">Paga</label>
+                                <input type="text" class="form-control" th:value="${nombreDestino}" disabled>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Monto</label>
+                                    <input type="number" step="0.01" min="0" class="form-control" th:field="*{monto}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Forma de Pago</label>
+                                    <select class="form-select" th:field="*{formaPago}" required>
+                                        <option value="EFECTIVO">Efectivo</option>
+                                        <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+                                        <option value="MERCADO_PAGO">Mercado Pago</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nro. Comprobante (transferencia / Mercado Pago)</label>
+                                <input type="text" class="form-control" th:field="*{comprobante}" placeholder="Ej: 123456789">
+                            </div>
+
+                            <button type="submit" class="btn btn-success mt-3">Registrar Pago</button>
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary mt-3">Cancelar</a>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

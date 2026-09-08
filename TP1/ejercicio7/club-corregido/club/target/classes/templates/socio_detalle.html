@@ -1,0 +1,93 @@
+<!--
+    socio_detalle.html
+    ----------------------------------------------------------------------
+    Ficha de un Socio. Esta MISMA vista se usa en dos rutas distintas:
+      - /socios/{id}   (ADMIN, cualquier socio, ve el listado completo)
+      - /socios/perfil (SOCIO, siempre y solo su propia ficha)
+    El Controller decide cuál socio mostrar; la vista no necesita saber
+    la diferencia salvo para ocultar acciones administrativas.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none"><i class="bi bi-justify fs-3"></i></a>
+        </header>
+
+        <div class="page-heading">
+            <h3 th:text="${esMiPerfil} ? 'Mi Perfil' : 'Detalle del Socio'"></h3>
+        </div>
+
+        <div class="page-content">
+            <div th:if="${exito != null}" class="alert alert-success" th:text="${exito}"></div>
+            <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+            <div th:if="${info != null}" class="alert alert-info" th:text="${info}"></div>
+
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <img th:if="${socio.foto != null}" th:src="@{/img/foto/{id}(id=${socio.foto.id})}" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+                                <img th:unless="${socio.foto != null}" th:src="@{/assets/images/faces/1.jpg}" class="img-fluid rounded-circle" style="width: 200px;">
+                            </div>
+                            <div class="col-md-8">
+                                <h4 th:text="${socio.nombre + ' ' + socio.apellido}"></h4>
+                                <p><strong>DNI:</strong> <span th:text="${socio.dni}"></span></p>
+                                <p><strong>Nro Socio:</strong> <span th:text="${socio.nroSocio}"></span></p>
+
+                                <p th:if="${socio.familia != null}">
+                                    <strong>Grupo Familiar:</strong>
+                                    <a th:href="@{/familias/{id}(id=${socio.familia.id})}" class="btn btn-sm btn-outline-primary">Ver Familia</a>
+                                </p>
+
+                                <p th:if="${socio.familia == null}">
+                                    <span class="badge bg-secondary">No pertenece a ningún grupo familiar</span>
+                                </p>
+
+                                <!-- El pago individual solo se habilita cuando el socio NO
+                                     pertenece a una familia (si pertenece, se cobra desde el
+                                     detalle de la familia y cubre a todo el grupo). -->
+                                <a sec:authorize="hasRole('ADMIN')" th:if="${socio.familia == null}"
+                                   th:href="@{/pagos/nuevo(idSocio=${socio.id})}" class="btn btn-success mt-2">
+                                    <i class="bi bi-cash-coin"></i> Registrar pago de cuota
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header"><h4>Historial de Pagos de Cuota</h4></div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr><th>Fecha</th><th>Monto</th><th>Forma de Pago</th><th>Estado</th><th>Comprobante</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="pago : ${pagos}">
+                            <td th:text="${pago.fechaPago}"></td>
+                            <td th:text="${'$' + pago.monto}"></td>
+                            <td th:text="${pago.formaPago}"></td>
+                            <td th:text="${pago.estado}"></td>
+                            <td th:text="${pago.comprobante}"></td>
+                        </tr>
+                        <tr th:if="${pagos.isEmpty()}"><td colspan="5" class="text-muted">Todavía no se registraron pagos.</td></tr>
+                        </tbody>
+                    </table>
+                    <p th:if="${socio.familia != null}" class="text-muted mb-0">
+                        Nota: si la cuota se paga por grupo familiar, el historial completo se ve en el detalle de la familia.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

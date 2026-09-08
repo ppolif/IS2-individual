@@ -1,0 +1,140 @@
+<!--
+    fragments/layout.html
+    ----------------------------------------------------------------------
+    Fragmento reutilizable de la VISTA (capa "View" del patrón MVC) que
+    contiene las tres partes comunes a todas las pantallas privadas del
+    sistema, construidas sobre la plantilla Bootstrap 5 "Mazer":
+
+      - head     : metatags + hojas de estilo (Bootstrap, Mazer, iconos)
+      - sidebar  : menú lateral izquierdo, plegable, con secciones que
+                   se muestran u ocultan según el ROL del usuario logueado
+                   usando el dialecto thymeleaf-extras-springsecurity6
+                   (sec:authorize="hasRole('ADMIN')" / "hasRole('SOCIO')").
+      - scripts  : JS de Bootstrap + Mazer al final del <body>.
+
+    Cada vista concreta (socios_lista.html, familia_detalle.html, etc.)
+    hace th:replace="~{fragments/layout :: head}" / ":: sidebar" / ":: scripts"
+    para no repetir este código en cada página (principio DRY).
+
+    Cada controlador que renderiza una vista privada agrega al Model el
+    atributo "activeMenu" (String) con el nombre de la sección activa
+    ("accesos", "socios", "familias", "perfil") para que el sidebar
+    resalte el ítem correspondiente con la clase "active" de Mazer.
+-->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Deportivo</title>
+
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendors/bootstrap-icons/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendors/iconly/bold.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendors/simple-datatables/style.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/app.css}">
+</head>
+
+<!-- ================================================================== -->
+<!-- SIDEBAR (menú lateral izquierdo, desplegable)                      -->
+<!-- ================================================================== -->
+<body>
+<div th:fragment="sidebar" id="sidebar">
+    <div class="sidebar-wrapper active">
+        <div class="sidebar-header">
+            <div class="d-flex justify-content-between">
+                <div class="logo">
+                    <a th:href="@{/}"><img th:src="@{/assets/images/logo/logo.png}" alt="Logo" width="130"></a>
+                </div>
+                <div class="sidebar-toggler x">
+                    <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <ul class="menu">
+                <li class="sidebar-title">Club Deportivo</li>
+
+                <!-- ===================== MENÚ ADMINISTRADOR ===================== -->
+                <!-- Solo visible para usuarios con ROLE_ADMIN: alta de socios,
+                     listado/alta de socios y familias, y control de accesos. -->
+                <li class="sidebar-item" sec:authorize="hasRole('ADMIN')"
+                    th:classappend="${activeMenu == 'accesos'} ? ' active'">
+                    <a th:href="@{/accesos/hoy}" class="sidebar-link">
+                        <i class="bi bi-door-open-fill"></i>
+                        <span>Control de Accesos</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item has-sub" sec:authorize="hasRole('ADMIN')"
+                    th:classappend="${activeMenu == 'socios'} ? ' active'">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Socios</span>
+                    </a>
+                    <ul class="submenu" th:classappend="${activeMenu == 'socios'} ? ' active'">
+                        <li class="submenu-item"><a th:href="@{/socios}">Listado de Socios</a></li>
+                        <li class="submenu-item"><a th:href="@{/registro}">Nuevo Socio</a></li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item has-sub" sec:authorize="hasRole('ADMIN')"
+                    th:classappend="${activeMenu == 'familias'} ? ' active'">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-house-heart-fill"></i>
+                        <span>Familias</span>
+                    </a>
+                    <ul class="submenu" th:classappend="${activeMenu == 'familias'} ? ' active'">
+                        <li class="submenu-item"><a th:href="@{/familias}">Listado de Familias</a></li>
+                        <li class="submenu-item"><a th:href="@{/familias/nueva}">Nuevo Grupo Familiar</a></li>
+                    </ul>
+                </li>
+
+                <!-- ===================== MENÚ SOCIO ===================== -->
+                <!-- Solo visible para usuarios con ROLE_SOCIO: su propio perfil
+                     y, si pertenece a un grupo, su grupo familiar. -->
+                <li class="sidebar-item" sec:authorize="hasRole('SOCIO')"
+                    th:classappend="${activeMenu == 'perfil'} ? ' active'">
+                    <a th:href="@{/socios/perfil}" class="sidebar-link">
+                        <i class="bi bi-person-fill"></i>
+                        <span>Mi Perfil</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item" sec:authorize="hasRole('SOCIO')"
+                    th:classappend="${activeMenu == 'familias'} ? ' active'">
+                    <a th:href="@{/familias/mia}" class="sidebar-link">
+                        <i class="bi bi-house-heart-fill"></i>
+                        <span>Mi Grupo Familiar</span>
+                    </a>
+                </li>
+
+                <!-- ===================== COMÚN A TODOS ===================== -->
+                <li class="sidebar-title">Cuenta</li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" th:text="${#authentication.name}">correo@club.com</a>
+                </li>
+                <li class="sidebar-item">
+                    <form th:action="@{/logout}" method="POST" class="px-3">
+                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- SCRIPTS (al final del body, en el orden que Mazer requiere)        -->
+<!-- ================================================================== -->
+<th:block th:fragment="scripts">
+    <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/assets/js/vendors.js}"></script>
+    <script th:src="@{/assets/vendors/simple-datatables/simple-datatables.js}"></script>
+    <script th:src="@{/assets/vendors/sweetalert2/sweetalert2.all.min.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
+</th:block>
+</body>
+</html>

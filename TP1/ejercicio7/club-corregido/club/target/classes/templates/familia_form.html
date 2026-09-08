@@ -1,0 +1,44 @@
+<!--
+    familia_form.html
+    ----------------------------------------------------------------------
+    Formulario de alta de un nuevo grupo Familiar (solo ADMIN). Solo pide
+    el apellido del grupo; los integrantes (encargados/familiares) se
+    agregan después desde familia_detalle.html, una vez que el grupo ya
+    existe (necesitamos su id para asociar Socios/Familiares).
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none"><i class="bi bi-justify fs-3"></i></a>
+        </header>
+
+        <div class="page-heading">
+            <h3>Nuevo Grupo Familiar</h3>
+        </div>
+
+        <div class="page-content">
+            <section class="section">
+                <div class="card col-md-6">
+                    <div class="card-body">
+                        <form th:action="@{/familias/nueva}" method="POST" th:object="${familiaDTO}">
+                            <div class="mb-3">
+                                <label class="form-label">Apellido del grupo familiar</label>
+                                <input type="text" class="form-control" th:field="*{apellido}" placeholder="Ej: González" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Crear grupo</button>
+                            <a th:href="@{/familias}" class="btn btn-outline-secondary">Cancelar</a>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!--
+    registro.html
+    ----------------------------------------------------------------------
+    Formulario de ALTA DE SOCIO. Accesible ÚNICAMENTE por un ADMIN
+    (protegido en SecurityConfig con hasRole('ADMIN') y en el Controller
+    con @PreAuthorize). No es un registro público: el socio nunca crea su
+    propia cuenta, el club la crea por él y luego el socio inicia sesión
+    con el correo/clave que se le asignaron acá.
+
+    Envía un multipart/form-data porque incluye el archivo de foto de
+    perfil (Imagen), que UsuarioService guarda a través de ImagenService
+    dentro de la misma transacción que crea el Usuario + Socio.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body>
+<div id="app">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none"><i class="bi bi-justify fs-3"></i></a>
+        </header>
+
+        <div class="page-heading">
+            <h3>Nuevo Socio</h3>
+        </div>
+
+        <div class="page-content">
+            <section class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Datos de la nueva cuenta</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+
+                        <form th:action="@{/registrar}" method="POST" enctype="multipart/form-data" th:object="${registroDTO}">
+
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-3">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" th:field="*{nombre}" placeholder="Nombre" required>
+                                </div>
+                                <div class="col-md-6 form-group mb-3">
+                                    <label class="form-label">Apellido</label>
+                                    <input type="text" class="form-control" th:field="*{apellido}" placeholder="Apellido" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-3">
+                                    <label class="form-label">Documento (DNI)</label>
+                                    <input type="number" class="form-control" th:field="*{dni}" placeholder="DNI" required>
+                                </div>
+                                <div class="col-md-6 form-group mb-3">
+                                    <label class="form-label">Rol de la cuenta</label>
+                                    <select class="form-select" th:field="*{rol}">
+                                        <option value="SOCIO">Socio</option>
+                                        <option value="ADMIN">Administrador</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="form-label">Correo Electrónico (usuario de acceso)</label>
+                                <input type="email" class="form-control" th:field="*{correo}" placeholder="correo@ejemplo.com" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="form-label">Foto de perfil / acceso</label>
+                                <input type="file" class="form-control" th:field="*{archivoFoto}" accept="image/*">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-3">
+                                    <label class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" th:field="*{clave}" placeholder="Contraseña" required>
+                                </div>
+                                <div class="col-md-6 form-group mb-3">
+                                    <label class="form-label">Repetir Contraseña</label>
+                                    <input type="password" class="form-control" th:field="*{repetirClave}" placeholder="Repetir Contraseña" required>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary mt-3" type="submit">Crear cuenta</button>
+                            <a th:href="@{/socios}" class="btn btn-outline-secondary mt-3">Cancelar</a>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
