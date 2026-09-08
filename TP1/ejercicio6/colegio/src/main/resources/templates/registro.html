@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registro Docente</title>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/app.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/pages/auth.css}">
+</head>
+<body>
+<div id="auth">
+    <div class="row h-100 justify-content-center">
+        <div class="col-lg-6 col-12">
+            <div id="auth-left" class="p-5">
+                <h1 class="auth-title">Registro Docente</h1>
+                <!-- th:object vincula el formulario al DTO de entrada[cite: 4] -->
+                <form th:action="@{/registro}" method="POST" th:object="${registroDTO}">
+
+                    <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-4">
+                            <input type="text" class="form-control" th:field="*{nombre}" placeholder="Nombre" required>
+                        </div>
+                        <div class="col-md-6 form-group mb-4">
+                            <input type="text" class="form-control" th:field="*{apellido}" placeholder="Apellido" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <input type="number" class="form-control" th:field="*{dni}" placeholder="DNI" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <select class="form-control" th:field="*{sexo}" required>
+                            <option value="" disabled selected>Seleccione Sexo...</option>
+                            <option value="MASCULINO">Masculino</option>
+                            <option value="FEMENINO">Femenino</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" th:field="*{fechaNacimiento}" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <input type="text" class="form-control" th:field="*{titulo}" placeholder="Título / Especialidad" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <input type="email" class="form-control" th:field="*{correo}" placeholder="Correo Institucional" required>
+                    </div>
+                    <div class="form-group mb-4">
+                        <input type="password" class="form-control" th:field="*{clave}" placeholder="Contraseña" required>
+                    </div>
+
+                    <button class="btn btn-primary btn-block btn-lg shadow-lg mt-3" type="submit">Registrarme</button>
+                    <div class="text-center mt-4">
+                        <a th:href="@{/login}" class="font-bold">Volver al Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

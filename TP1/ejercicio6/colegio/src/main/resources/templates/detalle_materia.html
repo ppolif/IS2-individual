@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/app.css}">
+</head>
+<body>
+<div id="main" class="p-4">
+    <div class="page-heading">
+        <h3 th:text="${materia.nombre}">Materia</h3>
+        <p class="text-subtitle text-muted" th:text="'Grado: ' + ${materia.grado}"></p>
+    </div>
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
+
+                <!-- Mensajes flash de éxito/error al inscribirse -->
+                <div th:if="${exito != null}" class="alert alert-success" th:text="${exito}"></div>
+                <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+
+                <h5 class="mb-3">Información de Cursada</h5>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item" th:text="'Aula asignada: ' + ${materia.aula.numero} + ' (Capacidad: ' + ${materia.aula.capacidad} + ')'"></li>
+                    <li class="list-group-item" th:text="'Profesor Titular: ' + ${materia.profesor.nombre} + ' ' + ${materia.profesor.apellido}"></li>
+                </ul>
+
+                <div class="d-flex gap-2 mt-4">
+                    <div sec:authorize="hasRole('PROFESOR')">
+                        <a th:href="@{/profesor/alumnos/{id}(id=${materia.id})}" class="btn btn-primary">
+                            Ver Listado de Alumnos
+                        </a>
+                    </div>
+
+                    <div sec:authorize="hasRole('ALUMNO')">
+                        <span th:if="${yaInscripto}" class="btn btn-success disabled">Ya estás inscripto</span>
+                        <form th:unless="${yaInscripto}" th:action="@{/alumno/materias/{id}/inscribirse(id=${materia.id})}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-success">Inscribirme</button>
+                        </form>
+                    </div>
+
+                    <!-- Botón para volver al listado general -->
+                    <a th:href="@{/materias}" class="btn btn-secondary">Volver al Listado de Materias</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

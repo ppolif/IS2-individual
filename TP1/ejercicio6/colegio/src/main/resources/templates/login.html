@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso - Sistema Académico</title>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/app.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/pages/auth.css}">
+</head>
+<body>
+<div id="auth">
+    <div class="row h-100">
+        <div class="col-lg-5 col-12">
+            <div id="auth-left">
+                <h1 class="auth-title">Ingreso</h1>
+                <p class="auth-subtitle mb-5">Ingresá tus credenciales institucionales.</p>
+
+                <!-- Mensajes de feedback manejados por Spring Security -->
+                <div th:if="${param.error}" class="alert alert-danger">Usuario o contraseña incorrectos.</div>
+                <div th:if="${param.logout}" class="alert alert-success">Sesión cerrada exitosamente.</div>
+                <div th:if="${param.exito}" class="alert alert-success">Registro completado. Ya puedes iniciar sesión.</div>
+
+                <!-- El action apunta a la ruta vigilada por Spring Security -->
+                <form th:action="@{/login}" method="POST">
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        <!-- Los name coinciden con usernameParameter("correo") -->
+                        <input type="email" class="form-control form-control-xl" name="correo" placeholder="Correo Personal" required>
+                        <div class="form-control-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    </div>
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        <!-- Los name coinciden con passwordParameter("clave") -->
+                        <input type="password" class="form-control form-control-xl" name="clave" placeholder="Contraseña" required>
+                        <div class="form-control-icon">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5" type="submit">Entrar</button>
+                </form>
+
+                <div class="text-center mt-5 text-lg fs-4">
+                    <p class="text-gray-600">
+                        ¿No tienes cuenta?
+                        <a th:href="@{/registro}" class="font-bold">Registrate como Docente</a>
+                        o
+                        <a th:href="@{/registro-alumno}" class="font-bold">como Alumno</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 d-none d-lg-block">
+            <div id="auth-right">
+                <!-- Espacio para la imagen lateral de Mazer -->
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
